@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "3.3.0.0",
+  "contentVersion": "3.3.0.0-avset",
   "parameters": {
     "templateBaseUrl": {
       "defaultValue": "https://cdn.f5.com/product/cloudsolutions/",
@@ -245,6 +245,20 @@
       },
       "type": "bool"
     },
+    "useAvailabilitySet": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "Deploy the HA cluster into an Availability Set (recommended for this 2-node failover deployment)."
+      },
+      "type": "bool"
+    },
+    "availabilitySetName": {
+      "defaultValue": "",
+      "metadata": {
+        "description": "Availability Set name (will be auto-generated if left empty)."
+      },
+      "type": "string"
+    },
     "bigIpUserAssignManagedIdentity": {
       "defaultValue": "",
       "metadata": {
@@ -325,7 +339,8 @@
     "internalSecurityGroup": "[if(greaterOrEquals(parameters('numNics'), 3), variables('internalNsgRulesArray'), createArray())]",
     "cfeStorageAccountName": "[if(not(empty(parameters('cfeStorageAccountName'))), parameters('cfeStorageAccountName'), concat(parameters('uniqueString'), 'stcfe'))]",
     "vmName01": "[concat(variables('uniqueString'), '-bigip-vm-01')]",
-    "vmName02": "[concat(variables('uniqueString'), '-bigip-vm-02')]"
+    "vmName02": "[concat(variables('uniqueString'), '-bigip-vm-02')]",
+    "availabilitySetName": "[if(empty(parameters('availabilitySetName')), concat(parameters('uniqueString'), '-avset'), parameters('availabilitySetName'))]"
   },
   "resources": [
     {
@@ -542,6 +557,12 @@
           },
           "zone": {
             "value": "[if(parameters('useAvailabilityZones'), '1', '')]"
+          },
+          "useAvailabilitySet": {
+            "value": "[parameters('useAvailabilitySet')]"
+          },
+          "availabilitySetName": {
+            "value": "[parameters('availabilitySetName')]"
           }
         }
       }
@@ -662,6 +683,12 @@
           },
           "zone": {
             "value": "[if(parameters('useAvailabilityZones'), '2', '')]"
+          },
+          "useAvailabilitySet": {
+            "value": "[parameters('useAvailabilitySet')]"
+          },
+          "availabilitySetName": {
+            "value": "[parameters('availabilitySetName')]"
           }
         }
       }

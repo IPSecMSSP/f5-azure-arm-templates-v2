@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "3.3.0.0",
+  "contentVersion": "3.3.0.0-avset",
   "parameters": {
     "adminUsername": {
       "defaultValue": "azureuser",
@@ -228,6 +228,20 @@
       },
       "type": "string"
     },
+    "availabilitySetName": {
+      "defaultValue": "",
+      "metadata": {
+        "description": "Name of the Availability Set to use/create. Leave empty to skip. For failover cluster this will be auto-populated."
+      },
+      "type": "string"
+    },
+    "useAvailabilitySet": {
+      "defaultValue": false,
+      "metadata": {
+        "description": "Deploy VMs into an Availability Set (mutually exclusive with Availability Zones)."
+      },
+      "type": "bool"
+    },
     "userAssignManagedIdentity": {
       "defaultValue": "",
       "metadata": {
@@ -418,7 +432,10 @@
       "bigIpPeerAddr": "[parameters('bigIpPeerAddr')]",
       "bigIpPeerHostname": "[parameters('bigIpPeerHostname')]"
     },
-    "useAvailabilityZones": "[not(empty(parameters('zone')))]"
+    "useAvailabilityZones": "[not(empty(parameters('zone')))]",
+    "useAvailabilitySet": "[parameters('useAvailabilitySet')]",
+    "availabilitySetName": "[if(empty(parameters('availabilitySetName')), concat(parameters('uniqueString'), '-avset'), parameters('availabilitySetName'))]",
+    "availabilitySetId": "[if(variables('useAvailabilitySet'), resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName')), '')]"
   },
   "resources": [
     {
@@ -496,12 +513,28 @@
       "type": "Microsoft.Network/networkInterfaces"
     },
     {
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2021-07-01",
+      "condition": "[and(variables('useAvailabilitySet'), not(empty(variables('availabilitySetName'))))]",
+      "name": "[variables('availabilitySetName')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('tagValues')]",
+      "properties": {
+        "platformFaultDomainCount": "2",
+        "platformUpdateDomainCount": "2"
+      },
+      "sku": {
+        "name": "Aligned"
+      }
+    },
+    {
       "apiVersion": "2019-12-01",
       "dependsOn": [
         "[variables('diagnosticsStorageAccountName')]",
         "[variables('networkInterfaceName0')]",
         "[variables('networkInterfaceName1')]",
-        "[variables('networkInterfaceName2')]"
+        "[variables('networkInterfaceName2')]",
+        "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
       ],
       "location": "[resourceGroup().location]",
       "identity": "[if(and(empty(parameters('userAssignManagedIdentity')), empty(parameters('roleDefinitionId'))), json('null'), variables('identity'))]",
@@ -536,7 +569,8 @@
             }
           }
         },
-        "storageProfile": "[if(variables('useCustomImage'), variables('storageProfileArray').customImage, variables('storageProfileArray').platformImage)]"
+        "storageProfile": "[if(variables('useCustomImage'), variables('storageProfileArray').customImage, variables('storageProfileArray').platformImage)]",
+        "availabilitySet": "[if(variables('useAvailabilitySet'), variables('availabilitySetId), json('null'))]"
       },
       "tags": "[union(variables('runtimeInitTag'), variables('bigIpPeerTag'), variables('cfeTag'), parameters('tagValues'))]",
       "zones": "[if(variables('useAvailabilityZones'), createArray(parameters('zone')), json('null'))]",

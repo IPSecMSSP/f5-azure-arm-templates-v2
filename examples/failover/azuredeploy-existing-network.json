@@ -562,7 +562,7 @@
             "value": "[parameters('useAvailabilitySet')]"
           },
           "availabilitySetName": {
-            "value": "[parameters('availabilitySetName')]"
+            "value": "[variables('availabilitySetName')]"
           }
         }
       }
@@ -688,7 +688,7 @@
             "value": "[parameters('useAvailabilitySet')]"
           },
           "availabilitySetName": {
-            "value": "[parameters('availabilitySetName')]"
+            "value": "[variables('availabilitySetName')]"
           }
         }
       }

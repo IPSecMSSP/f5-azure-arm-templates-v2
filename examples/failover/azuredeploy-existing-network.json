@@ -573,7 +573,8 @@
       "name": "bigIpTemplate02",
       "dependsOn": [
         "accessTemplate",
-        "dagTemplate"
+        "dagTemplate",
+        "bigIpTemplate01"
       ],
       "properties": {
         "mode": "Incremental",

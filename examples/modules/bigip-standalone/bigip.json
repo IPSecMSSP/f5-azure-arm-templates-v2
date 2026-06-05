@@ -570,7 +570,7 @@
           }
         },
         "storageProfile": "[if(variables('useCustomImage'), variables('storageProfileArray').customImage, variables('storageProfileArray').platformImage)]",
-        "availabilitySet": "[if(variables('useAvailabilitySet'), variables('availabilitySetId), json('null'))]"
+        "availabilitySet": "[if(variables('useAvailabilitySet'), variables('availabilitySetId'), json('null'))]"
       },
       "tags": "[union(variables('runtimeInitTag'), variables('bigIpPeerTag'), variables('cfeTag'), parameters('tagValues'))]",
       "zones": "[if(variables('useAvailabilityZones'), createArray(parameters('zone')), json('null'))]",

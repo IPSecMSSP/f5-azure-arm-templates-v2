@@ -337,7 +337,7 @@
     "appInstanceName": "[variables('uniqueString')]",
     "appInstanceType": "Standard_D2_v4",
     "cfeStorageAccountName": "[if(not(empty(parameters('cfeStorageAccountName'))), parameters('cfeStorageAccountName'), concat(parameters('uniqueString'), 'stcfe'))]",
-    "diagnosticsStorageAccountName": "[variables('diagnosticsStorageAccountName')]",
+    "diagnosticsStorageAccountName": "[parameters('diagnosticsStorageAccountName')]",
     "cloudInitUrl": "",
     "vmName01": "[concat(variables('uniqueString'), '-bigip-vm-01')]",
     "vmName02": "[concat(variables('uniqueString'), '-bigip-vm-02')]",

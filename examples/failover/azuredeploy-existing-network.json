@@ -341,7 +341,7 @@
     "externalSecurityGroup": "[variables('externalNsgRulesArray')]",
     "internalSecurityGroup": "[if(greaterOrEquals(parameters('numNics'), 3), variables('internalNsgRulesArray'), createArray())]",
     "cfeStorageAccountName": "[if(not(empty(parameters('cfeStorageAccountName'))), parameters('cfeStorageAccountName'), concat(parameters('uniqueString'), 'stcfe'))]",
-    "diagnosticsStorageAccountName": "[variables('diagnosticsStorageAccountName')]",
+    "diagnosticsStorageAccountName": "[parameters('diagnosticsStorageAccountName')]",
     "vmName01": "[concat(variables('uniqueString'), '-bigip-vm-01')]",
     "vmName02": "[concat(variables('uniqueString'), '-bigip-vm-02')]",
     "availabilitySetName": "[if(empty(parameters('availabilitySetName')), concat(parameters('uniqueString'), '-avset'), parameters('availabilitySetName'))]"

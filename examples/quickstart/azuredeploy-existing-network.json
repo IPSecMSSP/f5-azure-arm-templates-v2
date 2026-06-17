@@ -229,7 +229,7 @@
     "solutionType": "standard",
     "createSecret": "[and(not(empty(parameters('bigIpPasswordSecretValue'))), empty(parameters('bigIpPasswordSecretId')), empty(parameters('bigIpUserAssignManagedIdentity')))]",
     "useSecret": "[and(not(empty(parameters('bigIpPasswordSecretId'))), empty(parameters('bigIpPasswordSecretValue')), empty(parameters('bigIpUserAssignManagedIdentity')))]",
-    "diagnosticsStorageAccountName": "[variables('diagnosticsStorageAccountName')]",
+    "diagnosticsStorageAccountName": "[parameters('diagnosticsStorageAccountName')]",
     "customAssignableScopes": [],
     "customRolePermissions": [],
     "roleDescription": "Role created by quickstart deployment",

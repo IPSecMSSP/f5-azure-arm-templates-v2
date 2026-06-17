@@ -53,6 +53,9 @@
     "sshKey": {
       "value": ""
     },
+    "diagnosticsStorageAccountName": {
+      "value": ""
+    },
     "tagValues": {
       "value": {
         "application": "f5demoapp",

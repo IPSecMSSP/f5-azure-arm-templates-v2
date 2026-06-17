@@ -257,6 +257,12 @@
       },
       "type": "string"
     },
+    "diagnosticsStorageAccountName": {
+      "defaultValue": "",
+      "metadata": {
+        "description": "Name to use for the Diagnostics Storage Account. Leave blank to auto-generate from uniqueString."
+      }
+    },
     "tagValues": {
       "defaultValue": {
         "application": "f5demoapp",
@@ -331,6 +337,7 @@
     "appInstanceName": "[variables('uniqueString')]",
     "appInstanceType": "Standard_D2_v4",
     "cfeStorageAccountName": "[if(not(empty(parameters('cfeStorageAccountName'))), parameters('cfeStorageAccountName'), concat(parameters('uniqueString'), 'stcfe'))]",
+    "diagnosticsStorageAccountName": "[variables('diagnosticsStorageAccountName')]",
     "cloudInitUrl": "",
     "vmName01": "[concat(variables('uniqueString'), '-bigip-vm-01')]",
     "vmName02": "[concat(variables('uniqueString'), '-bigip-vm-02')]",
@@ -674,6 +681,9 @@
           "userAssignManagedIdentity": {
             "value": "[if(not(variables('createManagedIdentity')), parameters('bigIpUserAssignManagedIdentity'), reference('accessTemplate').outputs.userAssignedIdentityId.value)]"
           },
+          "diagnosticsStorageAccountName": {
+            "value": "[variables('diagnosticsProfile')]"
+          },
           "vmName": {
             "value": "[variables('vmName01')]"
           },
@@ -805,6 +815,9 @@
           },
           "userAssignManagedIdentity": {
             "value": "[if(not(variables('createManagedIdentity')), parameters('bigIpUserAssignManagedIdentity'), reference('accessTemplate').outputs.userAssignedIdentityId.value)]"
+          },
+          "diagnosticsStorageAccountName": {
+            "value": "[variables('diagnosticsStorageAccountName')]"
           },
           "vmName": {
             "value": "[variables('vmName02')]"

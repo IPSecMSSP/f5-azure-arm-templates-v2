@@ -71,6 +71,9 @@
     "bigIpUserAssignManagedIdentity": {
       "value": ""
     },
+    "diagnosticsStorageAccountName": {
+      "value": ""
+    },
     "cfeStorageAccountName": {
       "value": ""
     },

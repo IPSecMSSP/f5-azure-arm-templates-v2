@@ -71,11 +71,7 @@
       "type": "string"
     },
     "numNics": {
-      "allowedValues": [
-        1,
-        2,
-        3
-      ],
+      "allowedValues": [1, 2, 3],
       "defaultValue": 3,
       "metadata": {
         "description": "Enter valid number of network interfaces to create on the BIG-IP VE instance."
@@ -136,6 +132,12 @@
       },
       "type": "string"
     },
+    "diagnosticsStorageAccountName": {
+      "defaultValue": "",
+      "metadata": {
+        "description": "Name to use for the Diagnostics Storage Account. Leave blank to auto-generate from uniqueString."
+      }
+    },
     "bigIpUserAssignManagedIdentity": {
       "defaultValue": "",
       "metadata": {
@@ -179,6 +181,7 @@
     "solutionType": "standard",
     "createSecret": "[and(not(empty(parameters('bigIpPasswordSecretValue'))), empty(parameters('bigIpPasswordSecretId')), empty(parameters('bigIpUserAssignManagedIdentity')))]",
     "useSecret": "[and(not(empty(parameters('bigIpPasswordSecretId'))), empty(parameters('bigIpPasswordSecretValue')), empty(parameters('bigIpUserAssignManagedIdentity')))]",
+    "diagnosticsStorageAccountName": "[variables('diagnosticsStorageAccountName')]",
     "customAssignableScopes": [],
     "customRolePermissions": [],
     "roleDescription": "Role created by quickstart deployment",
@@ -597,6 +600,9 @@
           },
           "userAssignManagedIdentity": {
             "value": "[if(variables('createAccess'), reference('accessTemplate').outputs.userAssignedIdentityId.value, parameters('bigIpUserAssignManagedIdentity'))]"
+          },
+          "diagnosticsStorageAccountName": {
+            "value": "[variables('diagnosticsStorageAccountName')]"
           },
           "vmName": {
             "value": "[variables('vmName')]"

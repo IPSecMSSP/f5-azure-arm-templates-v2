@@ -104,6 +104,9 @@
     "userAssignManagedIdentity": {
       "value": ""
     },
+    "diagnosticsStorageAccountName": {
+      "value": ""
+    },
     "vmName": {
       "value": "bigip-vm"
     },
